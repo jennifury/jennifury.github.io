@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Jennifer Yang</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/index.css"
+  </head>
+  <body>
+    <nav>
+      <h1 >Jennifer Yang</h1>
+        <ul>
+            <li><a href="/">Home</a></li>
+            <li><a href="/templates/design.html">Design</a></li>
+            <li><a href="/templates/project.html">Project</a></li>
+            <li><a href="/templates/blog.html">Blog</a></li>
+            <li><a href="/templates/about.html">About</a></li>
+            <li><a href="/templates/contact.html">Connect</a></li>
+        </ul>
+    </nav>
+  		<div class="container">
+      		<div class="blurb">
+            <h3>Connect</h3>
+  				<p class="subheading">Feel free to reach out to me!</p>
+      		</div><!-- /.blurb -->
+
+              <table class="body">
+                  <td class="left" >
+                    <div class="sub-b">
+                      <div class="note">
+                        <p>Note:<hr>Times are hard. However, do not get disheartened. Stay in touch with your loves one. With today's technology, distance is not an obtsacles.</p>
+                      </div>
+                      <p class="subheading">If you enjoy my content or design, click on the heart!</p>
+                      <form name="like" id="like" action="https://docs.google.com/forms/d/e/1FAIpQLSfO0_6yOpsX3VZKgFDp03A7bjAhA-VcHaRT_97__oKJ_hOmnQ/formResponse?" target="hidden_iframe" onsubmit="msg()" >
+                        <input type="hidden" id="entry.1924666038" name="entry.1924666038" value="1">
+                        <input id ="heart" type="submit" value="  ~❤️~   " >
+                      </form>
+                      <br>
+                      <a class="insta" href="https://www.instagram.com/j3nni4y/" ><img class="insta" src="/static/img/insta.png" alt=""></a> <a href="https://www.linkedin.com/in/jennifer-m-yang/"><img class="linked" src="/static/img/linkedIn.png" alt=""></a>
+                    </div>
+                  </td>
+                <td class="right">
+                  <h4 class="subheading" style="  color: #FFF0F5 ">Leave a message!</h4>
+                  <hr>
+                  <form  name= "myform" id="myform" enctype="text/plain" action="https://docs.google.com/forms/u/0/d/e/1FAIpQLSf6ieOp-Y4ngafzaVfO0KLFuI6P4XKNV3TvetILqvH1lUBIZw/formResponse?" target="hidden_iframe" onsubmit="submitForm()">
+                    Name:<br><input type="text" name="entry.2098869059" id ="entry.2098869059"style="width: 40%" ><br>
+                    Email:<br><input type="text" style="width: 40%" name="entry.39609548" id="entry.39609548"><br>
+                    Subject:<br><input type="text" style="width: 40%" name="entry.987796540" id="entry.987796540"><br>
+                    Message:<br>
+                    <textarea rows="6" cols="60" style="width: 100%" name="entry.617118331" id="entry.617118331" form="myform"></textarea><br>
+                    <input type="submit" value="Submit"> <input type="reset">
+                  </form>
+                  <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;" onload="if(submitted) {}"></iframe>
+                </td>
+              </table>
+              <br>
+  		</div><!-- /.container -->
+      <script src="/static/js/index.js"></script>
+      <script type="text/javascript">var submitted=false;</script>
+<script type="text/javascript">
+$('#myform').on('submit', function(e) {
+  $('myform').fadeOut(2000);
+  $('#myform ').alert("done");
+  $('#myform ').reset();
+  $('#myform').prepend('Your submission has been processed...');
+  });
+</script>
+
+  		<footer>
+
+  		</footer>
+  	</body>
+  </html>
