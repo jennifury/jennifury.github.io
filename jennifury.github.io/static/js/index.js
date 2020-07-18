@@ -24,6 +24,7 @@ function animate() {
         }else{
             context.strokeStyle = 'rgb(255, 102, 102)';
         }
+
           line(particle, particle2);
         }
       }
