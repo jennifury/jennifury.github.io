@@ -1,144 +1,88 @@
-window.requestAnimFrame = function()
-    {
-        return (
-            window.requestAnimationFrame       ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame    ||
-            window.oRequestAnimationFrame      ||
-            window.msRequestAnimationFrame     ||
-            function(/* function */ callback){
-                window.setTimeout(callback, 1000 / 60);
-            }
-        );
-}();
+function line(particle, particle2) {
+  context.beginPath();
+  context.moveTo(particle.x, particle.y);
+  context.lineTo(particle2.x, particle2.y);
+  context.stroke();
+}
+//function to conect code
 
-var canvas = document.getElementById('canvas');
-var context = canvas.getContext('2d');
-
-//get DPI
-let dpi = window.devicePixelRatio || 1;
-context.scale(dpi, dpi);
-console.log(dpi);
-
-function fix_dpi() {
-//get CSS height
-//the + prefix casts it to an integer
-//the slice method gets rid of "px"
-let style_height = +getComputedStyle(canvas).getPropertyValue("height").slice(0, -2);
-let style_width = +getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
-
-//scale the canvas
-canvas.setAttribute('height', style_height * dpi);
-canvas.setAttribute('width', style_width * dpi);
+//animation for the code to move
+function animate() {
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  for (let i = 0; i < maxParticles; i++) {
+    let particle = particles[i];
+    context.fillRect(particle.x - particleSize / 2, particle.y - particleSize / 2, particleSize, particleSize);
+    for (let j = 0; j < maxParticles; j++) {
+      if (i != j) {
+        let particle2 = particles[j];
+        let distanceX = Math.abs(particle.x - particle2.x);
+        let distanceY = Math.abs(particle.y - particle2.y);
+        if (distanceX < threshold && distanceY < threshold) {
+          context.lineWidth = ((threshold * 1.2) - (distanceX + distanceY)) / 50;
+          if(j%2 ==0){
+            context.strokeStyle = 'rgb(204,204,255)';
+        }else{
+            context.strokeStyle = 'rgb(255, 102, 102)';
+        }
+          line(particle, particle2);
+        }
+      }
+    }
+    particle.x = particle.x + particle.vx;
+    particle.y = particle.y + particle.vy;
+    if (particle.x > canvas.width - particleSize || particle.x < particleSize) {
+      particle.vx = -particle.vx;
+    }
+    if (particle.y > canvas.height - particleSize || particle.y < particleSize)	 {
+      particle.vy = -particle.vy;
+    }
+  }
+  window.requestAnimationFrame(animate);
 }
 
-    var particle_count = 70,
-        particles = [],
-        couleurs   = ["#3a0088", "#930077", "#e61c5d","#ffbd39"];
-    function Particle()
-    {
+let canvas = document.getElementById('myCanvas');
+let context = canvas.getContext('2d');
+let particles = [];
+let particleSize = 3;
+let maxParticles =150;
+let threshold = 50;
+for (let i = 0; i < maxParticles; i++) {
+  let particle = {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    vx: Math.random(),
+    vy: Math.random()
+  }
 
-        this.radius = Math.round((Math.random()*3)+5);
-        this.x = Math.floor((Math.random() * ((+getComputedStyle(canvas).getPropertyValue("width").slice(0, -2) * dpi) - this.radius + 1) + this.radius));
-        this.y = Math.floor((Math.random() * ((+getComputedStyle(canvas).getPropertyValue("height").slice(0, -2) * dpi) - this.radius + 1) + this.radius));
-        this.color = couleurs[Math.floor(Math.random()*couleurs.length)];
-        this.speedx = Math.round((Math.random()*201)+0)/100;
-        this.speedy = Math.round((Math.random()*201)+0)/100;
+  particles.push(particle);
+}
+context.fillStyle = 'white';
+animate();
 
-        switch (Math.round(Math.random()*couleurs.length))
-        {
-            case 1:
-            this.speedx *= 1;
-            this.speedy *= 1;
-            break;
-            case 2:
-            this.speedx *= -1;
-            this.speedy *= 1;
-            break;
-            case 3:
-            this.speedx *= 1;
-            this.speedy *= -1;
-            break;
-            case 4:
-            this.speedx *= -1;
-            this.speedy *= -1;
-            break;
-        }
-
-        this.move = function()
-        {
-
-            context.beginPath();
-            context.globalCompositeOperation = 'source-over';
-            context.fillStyle   = this.color;
-            context.globalAlpha = 1;
-            context.arc(this.x, this.y, this.radius, 0, Math.PI*2, false);
-            context.fill();
-            context.closePath();
-
-            this.x = this.x + this.speedx;
-            this.y = this.y + this.speedy;
-
-            if(this.x <= 0+this.radius)
-            {
-                this.speedx *= -1;
-            }
-            if(this.x >= canvas.width-this.radius)
-            {
-                this.speedx *= -1;
-            }
-            if(this.y <= 0+this.radius)
-            {
-                this.speedy *= -1;
-            }
-            if(this.y >= canvas.height-this.radius)
-            {
-                this.speedy *= -1;
-            }
-
-            for (var j = 0; j < particle_count; j++)
-            {
-                var particleActuelle = particles[j],
-                    yd = particleActuelle.y - this.y,
-                    xd = particleActuelle.x - this.x,
-                    d  = Math.sqrt(xd * xd + yd * yd);
-
-                if ( d < 200 )
-                {
-                    context.beginPath();
-                    context.globalAlpha = (200 - d) / (200 - 0);
-                    context.globalCompositeOperation = 'destination-over';
-                    context.lineWidth = 1;
-                    context.moveTo(this.x, this.y);
-                    context.lineTo(particleActuelle.x, particleActuelle.y);
-                    context.strokeStyle = this.color;
-                    context.lineCap = "round";
-                    context.stroke();
-                    context.closePath();
-                }
-            }
-        };
-    };
-    for (var i = 0; i < particle_count; i++)
-    {
-        fix_dpi();
-        var particle = new Particle();
-        particles.push(particle);
-    }
-
-
-    function animate()
-    {
-        fix_dpi();
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        for (var i = 0; i < particle_count; i++)
-        {
-            particles[i].move();
-        }
-        requestAnimFrame(animate);
-    }
+function msg() {
+  var msg="Thank you for your support!\n";
+  var quote ="\n'Life does not get better by chance. It gets better by change.'\n";
+  var q= "\n                                                       - Jim Rohn -";
+  alert(msg+quote+q);
+}
 
 
 
+function submitForm() {
+  document.getElementById("myform").reset();
+    alert("Message have been submitted");
 
-    animate();
+   }
+
+window.onscroll = function() {myFunction()};
+
+var navbar = document.getElementById("navbar");
+var sticky = navbar.offsetTop;
+
+function myFunction() {
+  if (window.pageYOffset >= sticky) {
+    navbar.classList.add("sticky")
+  } else {
+    navbar.classList.remove("sticky");
+  }
+}
